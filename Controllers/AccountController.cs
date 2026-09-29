@@ -36,7 +36,8 @@ public sealed class AccountController(LiteFactoryDbContext db) : ControllerBase
             Id = user.Id,
             Email = user.Email,
             Nickname = user.Nickname,
-            CreatedAtUtc = user.CreatedAtUtc
+            CreatedAtUtc = user.CreatedAtUtc,
+            Role = user.Role
         });
     }
 }

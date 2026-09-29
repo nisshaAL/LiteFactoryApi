@@ -9,4 +9,6 @@ public sealed class AccountResponse
     public string Nickname { get; set; } = "";
 
     public DateTimeOffset CreatedAtUtc { get; set; }
+
+    public string Role { get; set; } = "";
 }

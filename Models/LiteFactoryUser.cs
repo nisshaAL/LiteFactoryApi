@@ -17,4 +17,6 @@ public sealed class LiteFactoryUser
     public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 
     public bool IsActive { get; set; } = true;
+
+    public string Role { get; set; } = LiteFactoryRoles.User;
 }

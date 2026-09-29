@@ -48,7 +48,8 @@ builder.Services
             IssuerSigningKey = signingKey,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromMinutes(1),
-            NameClaimType = JwtRegisteredClaimNames.Sub
+            NameClaimType = JwtRegisteredClaimNames.Sub,
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role
         };
     });
 

@@ -18,6 +18,10 @@ public sealed class LiteFactoryDbContext(DbContextOptions<LiteFactoryDbContext> 
         user.Property(value => value.PasswordHash).IsRequired();
         user.Property(value => value.CreatedAtUtc).IsRequired();
         user.Property(value => value.IsActive).IsRequired();
+        user.Property(value => value.Role)
+            .HasMaxLength(20)
+            .HasDefaultValue(LiteFactoryRoles.User)
+            .IsRequired();
         user.HasIndex(value => value.NormalizedEmail).IsUnique();
         user.HasIndex(value => value.NormalizedNickname).IsUnique();
     }

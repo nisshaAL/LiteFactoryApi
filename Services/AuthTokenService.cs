@@ -13,7 +13,8 @@ public sealed class AuthTokenService(JwtOptions options)
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim("nickname", user.Nickname)
+            new Claim("nickname", user.Nickname),
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var token = new JwtSecurityToken(

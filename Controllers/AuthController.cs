@@ -51,7 +51,8 @@ public sealed class AuthController(
             Nickname = nickname,
             NormalizedNickname = normalizedNickname,
             CreatedAtUtc = DateTimeOffset.UtcNow,
-            IsActive = true
+            IsActive = true,
+            Role = LiteFactoryRoles.User
         };
         user.PasswordHash = passwordHasher.HashPassword(user, request.Password);
 
@@ -130,7 +131,8 @@ public sealed class AuthController(
             Id = user.Id,
             Email = user.Email,
             Nickname = user.Nickname,
-            CreatedAtUtc = user.CreatedAtUtc
+            CreatedAtUtc = user.CreatedAtUtc,
+            Role = user.Role
         };
     }
 
