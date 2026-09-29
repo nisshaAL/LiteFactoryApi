@@ -72,19 +72,21 @@ public sealed class AuthController(
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
     {
-        var normalizedEmail = Normalize(request.Email);
-        var user = await db.Users.SingleOrDefaultAsync(value => value.NormalizedEmail == normalizedEmail, cancellationToken);
+        var normalizedLogin = Normalize(request.Login);
+        var user = await db.Users.SingleOrDefaultAsync(
+            value => value.NormalizedNickname == normalizedLogin || value.NormalizedEmail == normalizedLogin,
+            cancellationToken);
         if (user == null || !user.IsActive)
         {
             logger.LogInformation("LiteFactory login failed.");
-            return Unauthorized(new { error = "Invalid email or password." });
+            return Unauthorized(new { error = "Invalid login or password." });
         }
 
         var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
         if (result == PasswordVerificationResult.Failed)
         {
             logger.LogInformation("LiteFactory login failed. UserId={UserId}", user.Id);
-            return Unauthorized(new { error = "Invalid email or password." });
+            return Unauthorized(new { error = "Invalid login or password." });
         }
 
         var (token, expiresAtUtc) = tokenService.CreateAccessToken(user);
