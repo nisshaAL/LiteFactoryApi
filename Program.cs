@@ -32,6 +32,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<LiteFactoryDbContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddScoped<PasswordHasher<LiteFactoryUser>>();
 builder.Services.AddScoped<AuthTokenService>();
+builder.Services.AddScoped<FirstAdminBootstrapService>();
 builder.Services.AddSingleton(new JwtOptions(issuer, audience, signingKey, TimeSpan.FromMinutes(30)));
 
 builder.Services
@@ -63,6 +64,9 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<LiteFactoryDbContext>();
     db.Database.Migrate();
+
+    var firstAdminBootstrap = scope.ServiceProvider.GetRequiredService<FirstAdminBootstrapService>();
+    await firstAdminBootstrap.BootstrapAsync();
 }
 
 if (app.Environment.IsDevelopment())
