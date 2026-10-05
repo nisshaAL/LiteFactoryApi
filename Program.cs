@@ -27,8 +27,7 @@ if (string.IsNullOrWhiteSpace(jwtSigningKey) || Encoding.UTF8.GetByteCount(jwtSi
         "JWT signing key is not configured. Set Jwt:SigningKey with user secrets or LITEFACTORY_JWT_SIGNING_KEY with at least 32 bytes.");
 }
 
-var connectionString = builder.Configuration.GetConnectionString("LiteFactory")
-                       ?? "Data Source=data/litefactory.db";
+var databaseSettings = DatabaseConfiguration.Resolve(builder.Configuration);
 var issuer = builder.Configuration["Jwt:Issuer"] ?? "LiteFactoryApi";
 var audience = builder.Configuration["Jwt:Audience"] ?? "LiteFactoryClients";
 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey));
@@ -36,7 +35,8 @@ var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey))
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<LiteFactoryDbContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<LiteFactoryDbContext>(options =>
+    DatabaseConfiguration.ConfigureProvider(options, databaseSettings));
 builder.Services.AddScoped<PasswordHasher<LiteFactoryUser>>();
 builder.Services.AddScoped<AuthTokenService>();
 builder.Services.AddScoped<FirstAdminBootstrapService>();
@@ -64,9 +64,12 @@ builder.Services
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-app.Logger.LogInformation("LiteFactory API starting.");
+app.Logger.LogInformation("LiteFactory API starting. Database provider: {DatabaseProvider}.", databaseSettings.Provider);
 
-Directory.CreateDirectory(Path.Combine(app.Environment.ContentRootPath, "data"));
+if (databaseSettings.Provider == LiteFactoryDatabaseProvider.Sqlite)
+{
+    Directory.CreateDirectory(Path.Combine(app.Environment.ContentRootPath, "data"));
+}
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<LiteFactoryDbContext>();

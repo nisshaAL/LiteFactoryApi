@@ -10,13 +10,26 @@ namespace LiteFactoryApi.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Role",
-                table: "Users",
-                type: "TEXT",
-                maxLength: 20,
-                nullable: false,
-                defaultValue: "USER");
+            if (migrationBuilder.ActiveProvider == "Npgsql.EntityFrameworkCore.PostgreSQL")
+            {
+                migrationBuilder.AddColumn<string>(
+                    name: "Role",
+                    table: "Users",
+                    type: "character varying(20)",
+                    maxLength: 20,
+                    nullable: false,
+                    defaultValue: "USER");
+            }
+            else
+            {
+                migrationBuilder.AddColumn<string>(
+                    name: "Role",
+                    table: "Users",
+                    type: "TEXT",
+                    maxLength: 20,
+                    nullable: false,
+                    defaultValue: "USER");
+            }
         }
 
         /// <inheritdoc />
