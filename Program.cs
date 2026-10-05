@@ -12,6 +12,12 @@ JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
 var builder = WebApplication.CreateBuilder(args);
+var renderPort = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(renderPort))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{renderPort}");
+}
+
 var jwtSigningKey = builder.Configuration["Jwt:SigningKey"]
                     ?? Environment.GetEnvironmentVariable("LITEFACTORY_JWT_SIGNING_KEY");
 
