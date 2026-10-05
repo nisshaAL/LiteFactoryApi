@@ -35,8 +35,17 @@ var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey))
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<LiteFactoryDbContext>(options =>
-    DatabaseConfiguration.ConfigureProvider(options, databaseSettings));
+if (databaseSettings.Provider == LiteFactoryDatabaseProvider.PostgreSql)
+{
+    builder.Services.AddDbContext<LiteFactoryDbContext, LiteFactoryPostgresDbContext>(
+        options => options.UseNpgsql(databaseSettings.ConnectionString));
+}
+else
+{
+    builder.Services.AddDbContext<LiteFactoryDbContext, LiteFactorySqliteDbContext>(
+        options => options.UseSqlite(databaseSettings.ConnectionString));
+}
+
 builder.Services.AddScoped<PasswordHasher<LiteFactoryUser>>();
 builder.Services.AddScoped<AuthTokenService>();
 builder.Services.AddScoped<FirstAdminBootstrapService>();

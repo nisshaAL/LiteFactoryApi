@@ -33,23 +33,6 @@ public static class DatabaseConfiguration
             sqliteConnectionString);
     }
 
-    public static void ConfigureProvider(
-        DbContextOptionsBuilder options,
-        LiteFactoryDatabaseSettings settings)
-    {
-        switch (settings.Provider)
-        {
-            case LiteFactoryDatabaseProvider.PostgreSql:
-                options.UseNpgsql(settings.ConnectionString);
-                break;
-            case LiteFactoryDatabaseProvider.Sqlite:
-                options.UseSqlite(settings.ConnectionString);
-                break;
-            default:
-                throw new InvalidOperationException("Unsupported database provider.");
-        }
-    }
-
     public static string NormalizePostgreSqlConnectionString(string databaseUrl)
     {
         if (string.IsNullOrWhiteSpace(databaseUrl))

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LiteFactoryApi.Data;
 
-public sealed class LiteFactoryDbContext(DbContextOptions<LiteFactoryDbContext> options) : DbContext(options)
+public class LiteFactoryDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<LiteFactoryUser> Users => Set<LiteFactoryUser>();
 

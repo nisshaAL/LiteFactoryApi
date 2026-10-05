@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace LiteFactoryApi.Data;
 
-public sealed class LiteFactoryDbContextFactory : IDesignTimeDbContextFactory<LiteFactoryDbContext>
+public sealed class LiteFactoryDbContextFactory : IDesignTimeDbContextFactory<LiteFactorySqliteDbContext>
 {
-    public LiteFactoryDbContext CreateDbContext(string[] args)
+    public LiteFactorySqliteDbContext CreateDbContext(string[] args)
     {
-        var options = new DbContextOptionsBuilder<LiteFactoryDbContext>()
+        var options = new DbContextOptionsBuilder<LiteFactorySqliteDbContext>()
             .UseSqlite("Data Source=data/litefactory.db")
             .Options;
 
-        return new LiteFactoryDbContext(options);
+        return new LiteFactorySqliteDbContext(options);
     }
 }
